@@ -1,0 +1,60 @@
+# Python 3.11+ required (TaskGroup / except*).
+fastapi>=0.111,<0.116
+uvicorn[standard]>=0.30,<0.35
+websockets>=12.0
+pydantic>=2.7
+pydantic-settings>=2.4
+python-multipart>=0.0.9
+httpx>=0.27
+
+# Vision
+opencv-python>=4.10
+mediapipe>=0.10.14
+numpy>=1.26,<2.2
+
+# ML / inference
+torch>=2.3
+# Local STT: Vosk (Apache-2.0, Kaldi-based, streaming, CPU-friendly). Models are
+# downloaded separately -- see server/SETUP.md for which one to grab.
+vosk>=0.3.45
+scipy>=1.11
+
+# Local LLM is reached over HTTP via the existing httpx client (talking
+# to Ollama on http://localhost:11434), so no extra SDK is required.
+
+# OpenVoice v2 + MeloTTS (local TTS / voice cloning)
+# NOTE: we intentionally do NOT install these via requirements because upstream
+# pins overly-strict deps (e.g. numpy==1.22.0) that conflict with the rest of
+# this server. Install them manually with --no-deps (see SETUP.md):
+#   pip install --no-deps git+https://github.com/myshell-ai/OpenVoice.git
+#   pip install --no-deps git+https://github.com/myshell-ai/MeloTTS.git
+# MeloTTS still needs librosa at runtime (not pulled in with --no-deps):
+librosa>=0.10
+# Chinese number conversion used by MeloTTS import chain:
+cn2an>=0.5.22
+jieba>=0.42.1
+# OpenVoice pulls wavmark at runtime (used for watermarking helpers).
+wavmark>=0.0.3
+# MeloTTS English G2P (g2p_en) needs NLTK + the perceptron POS tagger and CMU
+# pronouncing dict. ``OpenVoiceTTS._ensure_nltk_data`` downloads these at
+# warmup; we keep nltk pinned here so the package itself is always available.
+nltk>=3.8
+# MeloTTS JP only: mecab-python3 + unidic-lite (often DLL issues on Windows).
+# Default EN uses a shim in app/tts/openvoice_client.py so MeCab is not required.
+# Then:
+#   python -m unidic download
+# ...and download `checkpoints_v2_0417.zip` into `server/models/openvoice_v2/`.
+
+# Misc
+aiofiles>=23.2
+python-dotenv>=1.0
+
+# scripts/serial_bridge.py: USB-CDC bridge between an ESP32 and the FastAPI
+# WebSocket pipelines (/ws/emission for mic-in, /ws/reception for TTS-out).
+pyserial>=3.5
+pyserial-asyncio>=0.6
+
+# scripts/live_predict.py: TTS via FastAPI OpenVoice (requests + pygame playback).
+# Use pygame-ce on Python 3.14+ (or if official pygame has no wheel); import is still `pygame`.
+requests>=2.31
+pygame-ce>=2.5

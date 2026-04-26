@@ -1,0 +1,25 @@
+# AR Glasses Companion — desktop app (Python 3.11+).
+#
+# This is the local replacement for the Next.js dashboard. It reuses the
+# server's `app.*` modules in-process (sign LSTM, OpenVoice TTS, local-LLM
+# translator, app state), so install it inside the SAME virtualenv that you
+# already used for `server/requirements.txt`.
+#
+#     cd server
+#     .venv\Scripts\activate
+#     pip install -r ../desktop/requirements.txt
+#
+# Heavy ML dependencies (torch, mediapipe, opencv-python, librosa, OpenVoice,
+# MeloTTS, ...) come from the server's requirements.txt and are intentionally
+# NOT duplicated here.
+
+# GUI
+customtkinter>=5.2,<6
+pillow>=10.0
+
+# Microphone capture for voice cloning.
+sounddevice>=0.4.6
+
+# Audio playback for the in-process TTS worker (already pulled in by the
+# server requirements, listed again for clarity).
+pygame-ce>=2.5
